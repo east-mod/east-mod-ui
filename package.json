@@ -2,7 +2,7 @@
   "name": "zvvn-mod-ui",
   "version": "1.0.3",
   "scripts": {
-    "start": "dumi dev -P 5001",
+    "start": "dumi dev",
     "docs:build": "dumi build",
     "docs:deploy": "gh-pages -d docs-dist",
     "build": "father-build",
@@ -36,6 +36,8 @@
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "antd": "^4.9.4",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "rc-tween-one": "^2.7.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
