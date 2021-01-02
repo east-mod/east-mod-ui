@@ -10,7 +10,7 @@ $ npm i zvvn-mod-ui --save or yarn add zvvn-mod-ui --save
 
 ### Live demo
 
-http://106.15.197.97:8000/
+http://ui.zvvnmod.com
 
 ### repository
 
