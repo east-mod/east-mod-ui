@@ -1,6 +1,6 @@
 {
   "name": "zvvn-mod-ui",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "scripts": {
     "start": "dumi dev -P 5001",
     "docs:build": "dumi build",
