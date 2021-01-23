@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tag } from 'antd';
+import { Tag as AntdTag } from 'antd';
 import { TagProps } from 'antd/lib/tag';
 import { TweenOneGroup } from 'rc-tween-one';
 import { PlusOutlined } from '@ant-design/icons';
@@ -13,17 +13,21 @@ const Container = styled.div`
   text-orientation: sideways-right;
 `;
 
-const EMTag = styled(Tag)`
+const EMTag = styled(AntdTag)`
   margin-bottom: 8px;
   padding: 10px 0px;
-  border-radius: ${(props: Pick<ITagProps, 'radius'>) =>
+  border-radius: ${(props: Pick<ITagProps, 'radius' | 'enable'>) =>
     props.radius ? '20px' : '0'};
-  color: #0084ff;
+  color: ${(props: Pick<ITagProps, 'radius' | 'enable'>) =>
+    props.enable === false ? '#808080' : '#0084ff'};
   font-size: 14px;
   line-height: 24px;
   vertical-align: top;
-  background: #0084ff1a;
+  background: ${(props: Pick<ITagProps, 'radius' | 'enable'>) =>
+    props.enable === false ? '#e6e6e6' : '#0084ff1a'};
   border: 1px solid #fff;
+  cursor: ${(props: Pick<ITagProps, 'radius' | 'enable'>) =>
+    props.enable === false ? 'not-allowed' : 'pointer'};
   .anticon-close {
     /* vertical-align: baseline; */
     color: #0084ff;
@@ -33,9 +37,13 @@ const EMTag = styled(Tag)`
     /* vertical-align: baseline; */
   }
   :hover {
-    cursor: pointer;
     background-color: #0084ff30;
   }
+`;
+
+const DefaultContainer = styled.div`
+  border-right: 1px solid #ddd;
+  margin-right: 8px;
 `;
 
 const AddTag = styled(EMTag)`
@@ -45,23 +53,27 @@ const AddTag = styled(EMTag)`
 
 export interface ITagProps extends Omit<TagProps, 'onChange'> {
   tags?: Array<string>;
+  defaultTags?: Array<string>;
   newButtonText?: string;
   readonly?: boolean;
   maxLength?: number;
   radius?: boolean;
+  enable?: boolean;
   onChange?: (value: Array<string>) => void;
 }
 
-const EmTag: React.FC<ITagProps> = (props: ITagProps) => {
+const Tag: React.FC<ITagProps> = (props: ITagProps) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState(props.tags || []);
   const {
+    defaultTags = [],
     newButtonText = 'New Tag',
     readonly = false,
     closable,
     maxLength = 20,
     radius = false,
+    enable = true,
     onChange,
   } = props;
 
@@ -96,6 +108,14 @@ const EmTag: React.FC<ITagProps> = (props: ITagProps) => {
     handleChange(newTags);
   };
 
+  const handleSelect = (value: string) => {
+    let newTags = tags;
+    if (value && tags.indexOf(value) === -1) {
+      newTags = [...tags, value];
+    }
+    setTags(newTags);
+  };
+
   const forMap = (tag: string) => {
     const tagElem = (
       <EMTag
@@ -120,6 +140,29 @@ const EmTag: React.FC<ITagProps> = (props: ITagProps) => {
 
   return (
     <Container>
+      {defaultTags && defaultTags.length > 0 ? (
+        <DefaultContainer>
+          <div>Defaults:</div>
+          {defaultTags.map((item: string) => (
+            <span key={item} style={{ display: 'inline-block' }}>
+              <EMTag
+                closable={false}
+                radius={radius}
+                enable={enable && tags.indexOf(item) === -1}
+                onClick={e => {
+                  e.preventDefault();
+                  handleSelect(item);
+                }}
+              >
+                {item}
+              </EMTag>
+            </span>
+          ))}
+        </DefaultContainer>
+      ) : (
+        ''
+      )}
+
       <div style={{ marginBottom: 16 }}>
         <TweenOneGroup
           enter={{
@@ -161,4 +204,4 @@ const EmTag: React.FC<ITagProps> = (props: ITagProps) => {
   );
 };
 
-export default EmTag;
+export default Tag;

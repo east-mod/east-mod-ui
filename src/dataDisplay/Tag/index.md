@@ -16,6 +16,24 @@ export default () => (
 );
 ```
 
+### WithDefaults
+
+```tsx
+import React from 'react';
+import { Tag } from 'zvvn-mod-ui';
+
+export default () => (
+  <Tag
+    defaultTags={['tag-1', 'tag-2']}
+    tags={['tag1', 'tag2', 'tag3']}
+    radius={true}
+    onChange={value => {
+      console.log(value);
+    }}
+  />
+);
+```
+
 ### WithRadius
 
 ```tsx
