@@ -88,6 +88,7 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
     showPopover = true,
     onSearch,
     onResultClick,
+    ...rest
   } = props;
   const hadSearchResult = searchResult && searchResult.length > 0;
 
@@ -151,10 +152,11 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
       prefix={<SearchOutlined style={{ color: '#999' }} />}
       placeholder={placeholder}
       onRef={onRef}
-      style={Object.assign({}, inputStyle, { width: 200 })}
+      style={Object.assign({}, inputStyle, { width: 200, marginLeft: '-6px' })}
       value={searchText}
       onChange={e => setSearchText(e.target.value)}
       onKeyUp={handleKeyUp}
+      {...rest}
     />
   );
 

@@ -5,7 +5,7 @@ import { TweenOneGroup } from 'rc-tween-one';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
-import { Input } from '@/index';
+import { Search, SearchResult } from '@/index';
 
 const Container = styled.div`
   padding: 6px;
@@ -51,72 +51,103 @@ const AddTag = styled(EMTag)`
   background-color: #fff;
 `;
 
+export interface ITag {
+  text: string;
+  value: string | number;
+}
+
 export interface ITagProps extends Omit<TagProps, 'onChange'> {
-  tags?: Array<string>;
-  defaultTags?: Array<string>;
+  tags?: Array<ITag>;
+  defaultTags?: Array<ITag>;
+  searchResult?: Array<SearchResult>;
+  defaultSearchResult?: Array<SearchResult>;
   newButtonText?: string;
   readonly?: boolean;
   maxLength?: number;
   radius?: boolean;
   enable?: boolean;
-  onChange?: (value: Array<string>) => void;
+  onChange?: (value: Array<ITag>) => void;
+  onSearch?: (value?: string) => void;
+}
+
+function isExist<T extends ITag | SearchResult>(tags: Array<ITag>, input: T) {
+  return tags.findIndex(item => item.value === input.value) > -1;
 }
 
 const Tag: React.FC<ITagProps> = (props: ITagProps) => {
   const [inputVisible, setInputVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  // const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState(props.tags || []);
+  // const [searchRef, setSearchRef] = useState();
   const {
     defaultTags = [],
     newButtonText = 'New Tag',
     readonly = false,
     closable,
-    maxLength = 20,
+    // maxLength = 20,
+    searchResult = [],
+    // defaultSearchResult = [],
     radius = false,
     enable = true,
+    onSearch,
     onChange,
   } = props;
+  // let searchRef = React.createRef<Input | null>();
+  // console.log(searchRef);
 
-  const handleChange = (value?: Array<string>) => {
+  const handleChange = (value?: Array<ITag>) => {
     if (typeof onChange === 'function') {
       onChange(value || tags);
     }
   };
 
-  const handleClose = (removedTag: string) => {
-    const newTags = tags.filter(tag => tag !== removedTag);
+  const handleClose = (removedTag: ITag) => {
+    const newTags = tags.filter(tag => tag.value !== removedTag?.value);
     setTags(newTags);
     handleChange(newTags);
   };
 
   const showInput = () => {
+    // setTimeout(() => {
+    //   console.log(searchRef);
+    //   searchRef?.current?.focus();
+    // }, 500)
     setInputVisible(true);
   };
 
-  const handleInputChange = (e: any) => {
-    setInputValue(e.target.value);
-  };
+  // const handleInputChange = (e: any) => {
+  //   setInputValue(e.target.value);
+  // };
 
-  const handleInputConfirm = () => {
+  // const handleInputConfirm = () => {
+  //   let newTags = tags;
+  //   if (inputValue && tags.findIndex(item => item.value === inputValue) === -1) {
+  //     newTags = [...tags, inputValue];
+  //   }
+  //   setTags(newTags);
+  //   setInputValue('');
+  //   setInputVisible(false);
+  //   handleChange(newTags);
+  // };
+
+  const handleSelect = (_value: ITag) => {
     let newTags = tags;
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      newTags = [...tags, inputValue];
+    if (_value && !isExist(tags, _value)) {
+      newTags = [...tags, _value];
     }
     setTags(newTags);
-    setInputValue('');
+  };
+
+  const handleResultClick = (_value: SearchResult) => {
+    let newTags = tags;
+    if (_value && !isExist(tags, _value)) {
+      newTags = [...tags, { text: _value.text, value: _value.value } as ITag];
+    }
+    setTags(newTags);
     setInputVisible(false);
-    handleChange(newTags);
   };
 
-  const handleSelect = (value: string) => {
-    let newTags = tags;
-    if (value && tags.indexOf(value) === -1) {
-      newTags = [...tags, value];
-    }
-    setTags(newTags);
-  };
-
-  const forMap = (tag: string) => {
+  const forMap = (tag: ITag) => {
     const tagElem = (
       <EMTag
         closable={closable || !readonly}
@@ -126,11 +157,11 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
           handleClose(tag);
         }}
       >
-        {tag}
+        {tag.text}
       </EMTag>
     );
     return (
-      <span key={tag} style={{ display: 'inline-block' }}>
+      <span key={tag.value} style={{ display: 'inline-block' }}>
         {tagElem}
       </span>
     );
@@ -143,18 +174,18 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
       {defaultTags && defaultTags.length > 0 ? (
         <DefaultContainer>
           <div>Defaults:</div>
-          {defaultTags.map((item: string) => (
-            <span key={item} style={{ display: 'inline-block' }}>
+          {defaultTags.map((item: ITag) => (
+            <span key={item.value} style={{ display: 'inline-block' }}>
               <EMTag
                 closable={false}
                 radius={radius}
-                enable={enable && tags.indexOf(item) === -1}
+                enable={enable && !isExist(tags, item)}
                 onClick={e => {
                   e.preventDefault();
                   handleSelect(item);
                 }}
               >
-                {item}
+                {item.text}
               </EMTag>
             </span>
           ))}
@@ -181,18 +212,18 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
         </TweenOneGroup>
       </div>
       {inputVisible && !readonly && (
-        <Input
-          onRef={value => value?.focus()}
-          type="text"
-          size="small"
-          height={120}
-          placeholder="Please input..."
-          style={{ borderRadius: radius ? '20px' : '0', marginTop: 10 }}
-          value={inputValue}
-          maxLength={maxLength}
-          onChange={handleInputChange}
-          onBlur={handleInputConfirm}
-          onPressEnter={handleInputConfirm}
+        <Search
+          placeholder="Input search text..."
+          // onRef={inputNode => setSearchRef(inputNode)}
+          defaultList={[]}
+          searchResult={searchResult}
+          onSearch={onSearch}
+          onResultClick={handleResultClick}
+          onBlur={() =>
+            setTimeout(() => {
+              setInputVisible(false);
+            }, 10)
+          }
         />
       )}
       {!inputVisible && !readonly && (
