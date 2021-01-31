@@ -99,6 +99,7 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
   };
 
   const handleResultClick = (value: SearchResult) => {
+    console.log(value);
     if (typeof onResultClick === 'function') {
       onResultClick(value);
     }
@@ -167,6 +168,7 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
           title={null}
           placement="right"
           trigger="focus"
+          visible={true}
           overlayClassName="em-search-popover"
           content={hadSearchResult ? SearchResultContent : DefaultContent}
         >
