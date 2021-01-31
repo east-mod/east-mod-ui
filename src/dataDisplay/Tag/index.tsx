@@ -136,6 +136,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
       newTags = [...tags, _value];
     }
     setTags(newTags);
+    handleChange(newTags);
   };
 
   const handleResultClick = (_value: SearchResult) => {
@@ -144,6 +145,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
       newTags = [...tags, { text: _value.text, value: _value.value } as ITag];
     }
     setTags(newTags);
+    handleChange(newTags);
     setInputVisible(false);
   };
 
