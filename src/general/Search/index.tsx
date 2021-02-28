@@ -99,7 +99,6 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
   };
 
   const handleResultClick = (value: SearchResult) => {
-    console.log(value);
     if (typeof onResultClick === 'function') {
       onResultClick(value);
     }
@@ -117,7 +116,10 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
                   category.list.map(item => (
                     <ResultItem
                       key={item.key}
-                      onClick={() => handleResultClick(item)}
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        handleResultClick(item);
+                      }}
                     >
                       {item.text}
                     </ResultItem>
@@ -140,7 +142,13 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
       <Result>
         {searchResult &&
           searchResult.map(item => (
-            <ResultItem key={item.key} onClick={() => handleResultClick(item)}>
+            <ResultItem
+              key={item.key}
+              onMouseDown={e => {
+                e.preventDefault();
+                handleResultClick(item);
+              }}
+            >
               {item.text}
             </ResultItem>
           ))}
