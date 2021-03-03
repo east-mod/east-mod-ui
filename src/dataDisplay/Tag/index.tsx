@@ -62,6 +62,7 @@ export interface ITagProps extends Omit<TagProps, 'onChange'> {
   searchResult?: Array<SearchResult>;
   defaultSearchResult?: Array<SearchResult>;
   newButtonText?: string;
+  searchPlaceHolder?: string;
   readonly?: boolean;
   maxLength?: number;
   radius?: boolean;
@@ -82,6 +83,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
   const {
     defaultTags = [],
     newButtonText = 'New Tag',
+    searchPlaceHolder = 'Input search text...',
     readonly = false,
     closable,
     // maxLength = 20,
@@ -215,7 +217,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
       </div>
       {inputVisible && !readonly && (
         <Search
-          placeholder="Input search text..."
+          placeholder={searchPlaceHolder}
           // onRef={inputNode => setSearchRef(inputNode)}
           defaultList={[]}
           searchResult={searchResult}
