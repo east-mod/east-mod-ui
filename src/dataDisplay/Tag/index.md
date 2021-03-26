@@ -3,57 +3,73 @@
 ### Default
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Tag } from 'zvvn-mod-ui';
 
-export default () => (
-  <Tag
-    tags={[
-      {
-        value: 1,
-        text: 'Tag1',
-      },
-      {
-        value: 2,
-        text: 'tag2',
-      },
-      {
-        value: 3,
-        text: 'tag3',
-      },
-      {
-        value: 4,
-        text: 'tag4',
-      },
-    ]}
-    searchResult={[
-      {
-        key: 1,
-        value: 11,
-        text: '怪物',
-      },
-      {
-        key: 2,
-        value: 12,
-        text: '冷血',
-      },
-      {
-        key: 3,
-        value: 13,
-        text: '怪物3',
-      },
-      {
-        key: 4,
-        value: 14,
-        text: '冷血冷血',
-      },
-    ]}
-    onSearch={value => console.log(value)}
-    onChange={value => {
-      console.log(value);
-    }}
-  />
-);
+const serverList = [
+  {
+    key: 1,
+    value: 11,
+    text: '怪物',
+  },
+  {
+    key: 2,
+    value: 12,
+    text: '冷血',
+  },
+  {
+    key: 3,
+    value: 13,
+    text: '怪物3',
+  },
+  {
+    key: 4,
+    value: 14,
+    text: '冷血冷血',
+  },
+];
+
+export default () => {
+  const [searchResult, setSearchResult] = useState([]);
+  const tags = [
+    {
+      value: 1,
+      text: 'Tag1',
+    },
+    {
+      value: 2,
+      text: 'tag2',
+    },
+    {
+      value: 3,
+      text: 'tag3',
+    },
+    {
+      value: 4,
+      text: 'tag4',
+    },
+  ];
+
+  const handleSearch = value => {
+    if (value) {
+      const filters = serverList.filter(item => item.text.indexOf(value) > -1);
+      setSearchResult(filters);
+    } else {
+      setSearchResult([]);
+    }
+  };
+
+  return (
+    <Tag
+      tags={tags}
+      searchResult={searchResult}
+      onSearch={handleSearch}
+      onChange={value => {
+        console.log(value);
+      }}
+    />
+  );
+};
 ```
 
 ### WithDefaults

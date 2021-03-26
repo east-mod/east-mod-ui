@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Tag as AntdTag } from 'antd';
 import { TagProps } from 'antd/lib/tag';
 import { TweenOneGroup } from 'rc-tween-one';
@@ -29,12 +29,10 @@ const EMTag = styled(AntdTag)`
   cursor: ${(props: Pick<ITagProps, 'radius' | 'enable'>) =>
     props.enable === false ? 'not-allowed' : 'pointer'};
   .anticon-close {
-    /* vertical-align: baseline; */
     color: #0084ff;
     margin-top: 7px;
   }
   .anticon-plus {
-    /* vertical-align: baseline; */
   }
   :hover {
     background-color: #0084ff30;
@@ -76,26 +74,26 @@ function isExist<T extends ITag | SearchResult>(tags: Array<ITag>, input: T) {
 }
 
 const Tag: React.FC<ITagProps> = (props: ITagProps) => {
+  const [searchText, setSearchText] = useState('');
+  const [searchResult, setSearchResult] = useState(props.searchResult || []);
   const [inputVisible, setInputVisible] = useState(false);
-  // const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState(props.tags || []);
-  // const [searchRef, setSearchRef] = useState();
   const {
     defaultTags = [],
     newButtonText = 'New Tag',
     searchPlaceHolder = 'Input search text...',
     readonly = false,
     closable,
-    // maxLength = 20,
-    searchResult = [],
-    // defaultSearchResult = [],
     radius = false,
     enable = true,
     onSearch,
     onChange,
   } = props;
-  // let searchRef = React.createRef<Input | null>();
-  // console.log(searchRef);
+  let searchRef = useRef(null);
+
+  useEffect(() => {
+    setSearchResult(props.searchResult || []);
+  }, [props.searchResult]);
 
   const handleChange = (value?: Array<ITag>) => {
     if (typeof onChange === 'function') {
@@ -104,33 +102,19 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
   };
 
   const handleClose = (removedTag: ITag) => {
-    const newTags = tags.filter(tag => tag.value !== removedTag?.value);
+    const newTags = tags.filter(tag => tag.text !== removedTag?.text);
     setTags(newTags);
     handleChange(newTags);
   };
 
   const showInput = () => {
-    // setTimeout(() => {
-    //   console.log(searchRef);
-    //   searchRef?.current?.focus();
-    // }, 500)
+    setTimeout(() => {
+      if (searchRef && searchRef.current) {
+        (searchRef.current as any).focus();
+      }
+    }, 50);
     setInputVisible(true);
   };
-
-  // const handleInputChange = (e: any) => {
-  //   setInputValue(e.target.value);
-  // };
-
-  // const handleInputConfirm = () => {
-  //   let newTags = tags;
-  //   if (inputValue && tags.findIndex(item => item.value === inputValue) === -1) {
-  //     newTags = [...tags, inputValue];
-  //   }
-  //   setTags(newTags);
-  //   setInputValue('');
-  //   setInputVisible(false);
-  //   handleChange(newTags);
-  // };
 
   const handleSelect = (_value: ITag) => {
     let newTags = tags;
@@ -149,6 +133,18 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
     setTags(newTags);
     handleChange(newTags);
     setInputVisible(false);
+    setSearchResult([]);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    if (typeof onSearch === 'function') {
+      onSearch(value);
+    }
+  };
+
+  const handleConfirm = (value: string) => {
+    handleResultClick({ text: value, key: value, value });
   };
 
   const forMap = (tag: ITag) => {
@@ -215,21 +211,25 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
           {tagChild}
         </TweenOneGroup>
       </div>
+
       {inputVisible && !readonly && (
         <Search
           placeholder={searchPlaceHolder}
-          // onRef={inputNode => setSearchRef(inputNode)}
+          onRef={searchRef}
           defaultList={[]}
           searchResult={searchResult}
-          onSearch={onSearch}
+          onChange={e => handleSearch(e.target.value)}
+          onSearch={() => handleConfirm(searchText)}
           onResultClick={handleResultClick}
           onBlur={() =>
             setTimeout(() => {
               setInputVisible(false);
+              setSearchResult([]);
             }, 10)
           }
         />
       )}
+
       {!inputVisible && !readonly && (
         <AddTag radius={radius} className="site-tag-plus" onClick={showInput}>
           <PlusOutlined /> <span>{newButtonText}</span>

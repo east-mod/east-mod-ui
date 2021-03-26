@@ -28,7 +28,7 @@ type ContainerProps = {
 };
 
 export interface IInputProps extends InputProps {
-  onRef?: (value: Input | null) => void;
+  onRef?: any;
 }
 
 export interface EMInput extends Input {}
