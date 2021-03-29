@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { Popover } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -69,16 +69,16 @@ export type ResultCategory = {
 
 export interface ISearchProps extends IInputProps {
   inputStyle?: object;
-  defaultSearchText?: string;
+  searchText?: string;
   defaultList?: Array<ResultCategory>;
   searchResult?: Array<SearchResult>;
   showPopover?: boolean;
+  onSearchTextChange?: (value: string) => void;
   onSearch?: (searchText: string | undefined) => void;
   onResultClick?: (value: SearchResult) => void;
 }
 
 const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
-  const [searchText, setSearchText] = useState(props.defaultSearchText);
   const {
     placeholder,
     defaultList,
@@ -86,6 +86,8 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
     onRef,
     inputStyle,
     showPopover = true,
+    searchText,
+    onSearchTextChange,
     onSearch,
     onResultClick,
     ...rest
@@ -101,6 +103,11 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
   const handleResultClick = (value: SearchResult) => {
     if (typeof onResultClick === 'function') {
       onResultClick(value);
+    }
+  };
+  const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (typeof onSearchTextChange === 'function') {
+      onSearchTextChange(e.target.value);
     }
   };
 
@@ -163,7 +170,7 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
       onRef={onRef}
       style={Object.assign({}, inputStyle, { width: 200 })}
       value={searchText}
-      onChange={e => setSearchText(e.target.value)}
+      onChange={handleSearchTextChange}
       onKeyUp={handleKeyUp}
       {...rest}
     />

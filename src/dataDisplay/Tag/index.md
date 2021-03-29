@@ -30,6 +30,7 @@ const serverList = [
 ];
 
 export default () => {
+  const [searchText, setSearchText] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const tags = [
     {
@@ -50,7 +51,8 @@ export default () => {
     },
   ];
 
-  const handleSearch = value => {
+  const handleSearchTextChange = value => {
+    setSearchText(value);
     if (value) {
       const filters = serverList.filter(item => item.text.indexOf(value) > -1);
       setSearchResult(filters);
@@ -63,7 +65,8 @@ export default () => {
     <Tag
       tags={tags}
       searchResult={searchResult}
-      onSearch={handleSearch}
+      searchText={searchText}
+      onSearchTextChange={handleSearchTextChange}
       onChange={value => {
         console.log(value);
       }}
@@ -249,7 +252,8 @@ export default () => {
       radius={true.toString()}
       tags={selectedTopics}
       searchResult={searchedTopics}
-      onSearch={handleSearch}
+      // searchText={searchText}
+      onSearchTextChange={handleSearch}
       onChange={handleChange}
     />
   );

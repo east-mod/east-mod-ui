@@ -61,12 +61,14 @@ export interface ITagProps extends Omit<TagProps, 'onChange'> {
   defaultSearchResult?: Array<SearchResult>;
   newButtonText?: string;
   searchPlaceHolder?: string;
+  searchText: string;
   readonly?: boolean;
   maxLength?: number;
   radius?: boolean;
   enable?: boolean;
   onChange?: (value: Array<ITag>) => void;
   onSearch?: (value?: string) => void;
+  onSearchTextChange?: (value?: string) => void;
 }
 
 function isExist<T extends ITag | SearchResult>(tags: Array<ITag>, input: T) {
@@ -74,7 +76,6 @@ function isExist<T extends ITag | SearchResult>(tags: Array<ITag>, input: T) {
 }
 
 const Tag: React.FC<ITagProps> = (props: ITagProps) => {
-  const [searchText, setSearchText] = useState('');
   const [searchResult, setSearchResult] = useState(props.searchResult || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [tags, setTags] = useState(props.tags || []);
@@ -84,10 +85,11 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
     searchPlaceHolder = 'Input search text...',
     readonly = false,
     closable,
+    searchText,
     radius = false,
     enable = true,
-    onSearch,
     onChange,
+    onSearchTextChange,
   } = props;
   let searchRef = useRef(null);
 
@@ -136,10 +138,9 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
     setSearchResult([]);
   };
 
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    if (typeof onSearch === 'function') {
-      onSearch(value);
+  const handleSearchTextChange = (value: string) => {
+    if (typeof onSearchTextChange === 'function') {
+      onSearchTextChange(value);
     }
   };
 
@@ -217,12 +218,14 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
           placeholder={searchPlaceHolder}
           onRef={searchRef}
           defaultList={[]}
+          searchText={searchText}
           searchResult={searchResult}
-          onChange={e => handleSearch(e.target.value)}
+          onSearchTextChange={handleSearchTextChange}
           onSearch={() => handleConfirm(searchText)}
           onResultClick={handleResultClick}
           onBlur={() =>
             setTimeout(() => {
+              handleSearchTextChange('');
               setInputVisible(false);
               setSearchResult([]);
             }, 10)

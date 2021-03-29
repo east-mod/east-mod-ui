@@ -35,6 +35,7 @@ export interface EMInput extends Input {}
 
 const EMInput: React.FC<IInputProps> = (props: IInputProps) => {
   const { height, onRef, style, ...rest } = props;
+
   const _height =
     typeof Number(props.height) === 'number'
       ? `${props.height || 200}`

@@ -9,7 +9,7 @@ import { Search } from 'zvvn-mod-ui';
 export default () => (
   <Search
     placeholder="Input search text..."
-    onSearch={value => console.log(value)}
+    onSearchTextChange={value => console.log(value)}
   />
 );
 ```
@@ -65,7 +65,7 @@ export default () => (
         ],
       },
     ]}
-    onSearch={value => console.log(value)}
+    onSearchTextChange={value => console.log(value)}
     onResultClick={value => console.log(value)}
   />
 );
@@ -103,7 +103,7 @@ export default () => (
         text: '冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血',
       },
     ]}
-    onSearch={value => console.log(value)}
+    onSearchTextChange={value => console.log(value)}
     onResultClick={value => console.log(value)}
   />
 );
@@ -142,7 +142,7 @@ export default () => (
         text: '冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血冷血',
       },
     ]}
-    onSearch={value => console.log(value)}
+    onSearchTextChange={value => console.log(value)}
     onResultClick={value => console.log(value)}
   />
 );
