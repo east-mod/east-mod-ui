@@ -134,7 +134,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
     }
     setTags(newTags);
     handleChange(newTags);
-    setInputVisible(false);
+    // setInputVisible(false);
     setSearchResult([]);
   };
 
@@ -171,7 +171,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
   const tagChild = tags.map(forMap);
 
   return (
-    <Container>
+    <Container className="tag-container">
       {defaultTags && defaultTags.length > 0 ? (
         <DefaultContainer>
           <div>Defaults:</div>
@@ -226,7 +226,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
           onBlur={() =>
             setTimeout(() => {
               handleSearchTextChange('');
-              setInputVisible(false);
+              // setInputVisible(false);
               setSearchResult([]);
             }, 10)
           }

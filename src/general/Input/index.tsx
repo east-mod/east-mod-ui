@@ -42,7 +42,7 @@ const EMInput: React.FC<IInputProps> = (props: IInputProps) => {
       : props.width;
 
   return (
-    <Container height={_height}>
+    <Container height={_height} className="input-container">
       <InputContent>
         <AntdInput
           {...rest}

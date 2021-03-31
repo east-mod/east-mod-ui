@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Popover } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
-import { Input, IInputProps, Empty } from '@/index';
+import { IInputProps, Input } from '@/index';
 import './style.less';
 
 const Container = styled.div`
@@ -16,6 +16,7 @@ const PopoverContent = styled.div`
   text-orientation: sideways-right;
   padding-right: 10px;
   height: 100%;
+
   .ant-empty-normal {
     .ant-empty-image {
       height: auto !important;
@@ -23,7 +24,7 @@ const PopoverContent = styled.div`
   }
 `;
 
-const Category = styled.div``;
+// const Category = styled.div``;
 
 const Result = styled.ul`
   padding: 0;
@@ -38,23 +39,24 @@ const ResultItem = styled.li`
   text-overflow: ellipsis;
   overflow: hidden;
   word-break: break-all;
+
   :hover {
     cursor: pointer;
     background-color: #f3f3f3;
   }
 `;
 
-const Title = styled.div`
-  border-right: 1px solid #e5e5e5;
-  color: #999;
-  padding: 4px;
-`;
-
-const NoResult = styled.p`
-  color: #d0d0d0;
-  margin-top: 70px;
-  font-size: 12px;
-`;
+// const Title = styled.div`
+//   border-right: 1px solid #e5e5e5;
+//   color: #999;
+//   padding: 4px;
+// `;
+//
+// const NoResult = styled.p`
+//   color: #d0d0d0;
+//   margin-top: 70px;
+//   font-size: 12px;
+// `;
 
 export type SearchResult = {
   key: string | number;
@@ -111,38 +113,38 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
     }
   };
 
-  const DefaultContent = (
-    <PopoverContent>
-      {defaultList && defaultList.length > 0 ? (
-        <Category>
-          {defaultList.map((category, idx) => (
-            <div key={idx}>
-              <Title>{category?.title}</Title>
-              <Result>
-                {category && category.list && category.list.length > 0 ? (
-                  category.list.map(item => (
-                    <ResultItem
-                      key={item.key}
-                      onMouseDown={e => {
-                        e.preventDefault();
-                        handleResultClick(item);
-                      }}
-                    >
-                      {item.text}
-                    </ResultItem>
-                  ))
-                ) : (
-                  <NoResult>No Data</NoResult>
-                )}
-              </Result>
-            </div>
-          ))}
-        </Category>
-      ) : (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 40 }} />
-      )}
-    </PopoverContent>
-  );
+  // const DefaultContent = (
+  //   <PopoverContent>
+  //     {defaultList && defaultList.length > 0 ? (
+  //       <Category>
+  //         {defaultList.map((category, idx) => (
+  //           <div key={idx}>
+  //             <Title>{category?.title}</Title>
+  //             <Result>
+  //               {category && category.list && category.list.length > 0 ? (
+  //                 category.list.map(item => (
+  //                   <ResultItem
+  //                     key={item.key}
+  //                     onMouseDown={e => {
+  //                       e.preventDefault();
+  //                       handleResultClick(item);
+  //                     }}
+  //                   >
+  //                     {item.text}
+  //                   </ResultItem>
+  //                 ))
+  //               ) : (
+  //                 <NoResult>No Data</NoResult>
+  //               )}
+  //             </Result>
+  //           </div>
+  //         ))}
+  //       </Category>
+  //     ) : (
+  //       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 40 }} />
+  //     )}
+  //   </PopoverContent>
+  // );
 
   const SearchResultContent = (
     <PopoverContent>
@@ -177,15 +179,15 @@ const Search: React.FC<ISearchProps> = (props: ISearchProps) => {
   );
 
   return (
-    <Container>
-      {showPopover ? (
+    <Container className="search-container">
+      {showPopover && hadSearchResult ? (
         <Popover
           title={null}
           placement="right"
           trigger="focus"
           visible={true}
           overlayClassName="em-search-popover"
-          content={hadSearchResult ? SearchResultContent : DefaultContent}
+          content={SearchResultContent}
         >
           {inputContent}
         </Popover>
