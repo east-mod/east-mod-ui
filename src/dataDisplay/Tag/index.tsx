@@ -134,7 +134,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
     }
     setTags(newTags);
     handleChange(newTags);
-    // setInputVisible(false);
+    setInputVisible(false);
     setSearchResult([]);
   };
 
@@ -226,7 +226,7 @@ const Tag: React.FC<ITagProps> = (props: ITagProps) => {
           onBlur={() =>
             setTimeout(() => {
               handleSearchTextChange('');
-              // setInputVisible(false);
+              setInputVisible(false);
               setSearchResult([]);
             }, 10)
           }
