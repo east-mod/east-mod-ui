@@ -1,6 +1,6 @@
 ## Hello zvvn-mod-ui!
 
-> The vertical components for [zvvnmod](http://106.15.197.97:5000/#/home-page), based on the [antd](https://ant.design/docs/spec/introduce).
+> The vertical components for [zvvnmod](https://zvvnmod.com/#/home), based on the [antd](https://ant.design/docs/spec/introduce).
 
 ## Components
 
